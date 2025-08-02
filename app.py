@@ -88,9 +88,7 @@ if st.button("🔍 Ver Heridas Activas"):
     if heridas_activas:
         st.subheader("💔 Tus Heridas Activas")
         for h, (estado, pct) in heridas_activas.items():
-            st.error(f"🔹 {h} ({estado} - {pct}%)
-
-{explicaciones[h]}")
+            st.error(f"🔹 {h} ({estado} - {pct}%)\n\n{explicaciones[h]}")
         st.session_state.heridas_activas = heridas_activas
     else:
         st.success("🎉 No hay heridas activas detectadas. ¡Sigue cuidándote emocionalmente!")

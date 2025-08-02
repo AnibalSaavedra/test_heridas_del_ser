@@ -9,7 +9,20 @@ st.set_page_config(page_title="Test de Heridas del Ser", layout="centered")
 
 st.title("🧠 Test Integral de Heridas del Ser")
 st.image("logo.png", width=120)
-st.markdown("Responde cada afirmación del 1 (nada) al 5 (totalmente de acuerdo). Al finalizar verás tus heridas activas y recibirás recomendaciones.")
+st.markdown(
+    "Este test te ayudará a identificar heridas emocionales que pueden influir en tu bienestar actual. "
+    "**Lee atentamente cada afirmación** y responde del 1 al 5 según cuánto te identifiques:
+
+"
+    "- 1: No me identifico en absoluto
+"
+    "- 3: A veces me pasa
+"
+    "- 5: Me ocurre con mucha frecuencia
+
+"
+    "💡 Si tienes dudas sobre el significado de alguna afirmación, puedes presionar el botón de ayuda al lado para recibir una breve explicación."
+)
 
 heridas = {
     "Abandono": [1, 16],
@@ -52,27 +65,37 @@ afirmaciones = {
     20: "Siento que cargo con los dolores de mi familia."
 }
 
-explicaciones = {
-    "Abandono": "Dependencia emocional, miedo a la soledad, ansiedad de separación.",
-    "Rechazo": "Autoexigencia, necesidad de aprobación, miedo a no ser suficiente.",
-    "Humillación": "Vergüenza corporal, culpa, dificultad para disfrutar.",
-    "Traición": "Control, desconfianza, celos, rigidez.",
-    "Injusticia": "Frialdad, perfeccionismo, autoexigencia extrema.",
-    "Falta de propósito": "Vacío existencial, apatía, pérdida de rumbo.",
-    "Desarraigo": "Sensación de no pertenecer, dificultad para establecer raíces.",
-    "Invisibilidad": "Sensación de no importar, baja autoestima, represión emocional.",
-    "Transgeneracional": "Cargas familiares no conscientes, patrones repetidos.",
-    "Disociación": "Ansiedad, desconexión del cuerpo, crisis de identidad.",
-    "Carencia": "Sensación de no merecer, dificultad para recibir.",
-    "Duelo": "Tristeza profunda, apego al pasado, miedo a nuevos vínculos.",
-    "Identidad": "Confusión personal, doble vida, represión.",
-    "Amor no correspondido": "Dependencia afectiva, dolor emocional, idealización.",
-    "Mixtas": "Emociones mezcladas, patrones repetitivos, caos interno."
+ayudas = {
+    1: "Ansiedad al estar solo puede mostrar miedo a ser abandonado.",
+    2: "Buscar amor esforzándote muestra necesidad de validación.",
+    3: "Vergüenza corporal puede ocultar una herida de humillación.",
+    4: "La dificultad para confiar puede venir de traiciones pasadas.",
+    5: "Ser exigente puede ser resultado de injusticia vivida.",
+    6: "Sensación de vacío es una señal de pérdida de propósito.",
+    7: "No sentir pertenencia puede indicar desarraigo o exclusión.",
+    8: "Sentirse invisible suele relacionarse con heridas infantiles.",
+    9: "Cargar memorias que no son tuyas puede ser transgeneracional.",
+    10: "Desconexión con la infancia indica posibles bloqueos.",
+    11: "Dificultad en recibir amor habla de heridas de carencia.",
+    12: "Dolor por pérdidas puede mostrar duelo no resuelto.",
+    13: "Demostrar tu valor puede ocultar inseguridad de identidad.",
+    14: "Sufrir por amor no correspondido muestra dependencia emocional.",
+    15: "La culpa al disfrutar puede estar asociada a humillación.",
+    16: "Esperar lo peor es propio del miedo al abandono.",
+    17: "No disfrutar el presente es típico de disociación emocional.",
+    18: "El rechazo paralizante es una herida del yo profundo.",
+    19: "Inmadurez emocional puede ser resultado de heridas mixtas.",
+    20: "Dolor heredado sin vivirlo es carga transgeneracional."
 }
 
 respuestas = {}
 for i in range(1, 21):
-    respuestas[i] = st.slider(f"{i}. {afirmaciones[i]}", 1, 5, 3)
+    col1, col2 = st.columns([5, 1])
+    with col1:
+        respuestas[i] = st.slider(f"{i}. {afirmaciones[i]}", 1, 5, 3, key=f"slider_{i}")
+    with col2:
+        if st.button("?", key=f"help_{i}"):
+            st.info(ayudas[i])
 
 if st.button("🔍 Ver Heridas Activas"):
     heridas_activas = {}
@@ -88,45 +111,7 @@ if st.button("🔍 Ver Heridas Activas"):
     if heridas_activas:
         st.subheader("💔 Tus Heridas Activas")
         for h, (estado, pct) in heridas_activas.items():
-            st.error(f"🔹 {h} ({estado} - {pct}%)\n\n{explicaciones[h]}")
+            st.error(f"🔹 {h} ({estado} - {pct}%)\n\n{ayudas[list(afirmaciones.keys())[list(heridas[h])[0] - 1]]}")
         st.session_state.heridas_activas = heridas_activas
     else:
         st.success("🎉 No hay heridas activas detectadas. ¡Sigue cuidándote emocionalmente!")
-
-if "heridas_activas" in st.session_state and st.button("📄 Descargar Informe PDF"):
-    class PDF(FPDF):
-        def header(self):
-            self.set_font("Arial", "B", 12)
-            self.cell(0, 10, "Informe de Heridas del Ser", 0, 1, "C")
-        def chapter(self, h, estado, pct, explicacion):
-            self.set_font("Arial", "B", 12)
-            self.cell(0, 10, f"{h} ({estado} - {pct}%)", 0, 1)
-            self.set_font("Arial", "", 11)
-            self.multi_cell(0, 8, explicacion)
-            self.ln()
-        def footer(self):
-            self.set_y(-20)
-            self.set_font("Arial", "I", 10)
-            self.cell(0, 10, "Informe generado por Anibal Saavedra – Biotecnólogo MIB", 0, 0, "C")
-
-    pdf = PDF()
-    pdf.add_page()
-    pdf.set_font("Arial", "", 11)
-    pdf.cell(0, 10, f"Fecha: {datetime.now().strftime('%d/%m/%Y')}", 0, 1)
-    for h, (estado, pct) in st.session_state.heridas_activas.items():
-        pdf.chapter(h, estado, pct, f"- Descripción: {explicaciones[h]}\n- Estado: {estado}\n- Porcentaje: {pct}%")
-    pdf.output("informe_heridas.pdf")
-
-    with open("informe_heridas.pdf", "rb") as f:
-        b64 = base64.b64encode(f.read()).decode()
-        href = f'<a href="data:application/octet-stream;base64,{b64}" download="informe_heridas.pdf">📥 Haz clic aquí para descargar tu informe PDF</a>'
-        st.markdown(href, unsafe_allow_html=True)
-
-    os.remove("informe_heridas.pdf")
-
-if "heridas_activas" in st.session_state:
-    st.markdown("---")
-    st.markdown("📲 ¿Deseas agendar una consulta personal?")
-    mensaje = "Hola Anibal, realicé el test de Heridas del Ser y quiero agendar una consulta personalizada."
-    url_whatsapp = f"https://wa.me/56967010107?text={mensaje.replace(' ', '%20')}"
-    st.markdown(f"[💬 Enviar mensaje por WhatsApp]({url_whatsapp})", unsafe_allow_html=True)

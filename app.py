@@ -9,20 +9,16 @@ st.set_page_config(page_title="Test de Heridas del Ser", layout="centered")
 
 st.title("🧠 Test Integral de Heridas del Ser")
 st.image("logo.png", width=120)
-st.markdown(
-    "Este test te ayudará a identificar heridas emocionales que pueden influir en tu bienestar actual. "
-    "**Lee atentamente cada afirmación** y responde del 1 al 5 según cuánto te identifiques:
+st.markdown("""
+Este test te ayudará a identificar heridas emocionales que pueden influir en tu bienestar actual.  
+**Lee atentamente cada afirmación** y responde del 1 al 5 según cuánto te identifiques:
 
-"
-    "- 1: No me identifico en absoluto
-"
-    "- 3: A veces me pasa
-"
-    "- 5: Me ocurre con mucha frecuencia
+- 1: No me identifico en absoluto  
+- 3: A veces me pasa  
+- 5: Me ocurre con mucha frecuencia
 
-"
-    "💡 Si tienes dudas sobre el significado de alguna afirmación, puedes presionar el botón de ayuda al lado para recibir una breve explicación."
-)
+💡 Si tienes dudas sobre el significado de alguna afirmación, puedes presionar el botón de ayuda al lado para recibir una breve explicación.
+""")
 
 heridas = {
     "Abandono": [1, 16],

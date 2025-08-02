@@ -10,14 +10,14 @@ st.set_page_config(page_title="Test de Heridas del Ser", layout="centered")
 st.title("🧠 Test Integral de Heridas del Ser")
 st.image("logo.png", width=120)
 st.markdown("""
-Este test te ayudará a identificar heridas emocionales que pueden influir en tu bienestar actual.  
-**Lee atentamente cada afirmación** y responde del 1 al 5 según cuánto te identifiques:
+Este test te ayudará a **identificar heridas emocionales** que influyen en tu bienestar actual.  
+**Lee cada afirmación con calma** y responde del 1 al 5 según cuánto te identifiques:
 
-- 1: No me identifico en absoluto  
-- 3: A veces me pasa  
-- 5: Me ocurre con mucha frecuencia
+- 1: No me representa  
+- 3: A veces me ocurre  
+- 5: Me ocurre frecuentemente
 
-💡 Si tienes dudas sobre el significado de alguna afirmación, puedes presionar el botón de ayuda al lado para recibir una breve explicación.
+📘 Si no entiendes alguna afirmación, haz clic en el botón `Explicar` para recibir una aclaración sencilla que te ayudará a comprender mejor.
 """)
 
 heridas = {
@@ -61,27 +61,27 @@ afirmaciones = {
     20: "Siento que cargo con los dolores de mi familia."
 }
 
-ayudas = {
-    1: "Ansiedad al estar solo puede mostrar miedo a ser abandonado.",
-    2: "Buscar amor esforzándote muestra necesidad de validación.",
-    3: "Vergüenza corporal puede ocultar una herida de humillación.",
-    4: "La dificultad para confiar puede venir de traiciones pasadas.",
-    5: "Ser exigente puede ser resultado de injusticia vivida.",
-    6: "Sensación de vacío es una señal de pérdida de propósito.",
-    7: "No sentir pertenencia puede indicar desarraigo o exclusión.",
-    8: "Sentirse invisible suele relacionarse con heridas infantiles.",
-    9: "Cargar memorias que no son tuyas puede ser transgeneracional.",
-    10: "Desconexión con la infancia indica posibles bloqueos.",
-    11: "Dificultad en recibir amor habla de heridas de carencia.",
-    12: "Dolor por pérdidas puede mostrar duelo no resuelto.",
-    13: "Demostrar tu valor puede ocultar inseguridad de identidad.",
-    14: "Sufrir por amor no correspondido muestra dependencia emocional.",
-    15: "La culpa al disfrutar puede estar asociada a humillación.",
-    16: "Esperar lo peor es propio del miedo al abandono.",
-    17: "No disfrutar el presente es típico de disociación emocional.",
-    18: "El rechazo paralizante es una herida del yo profundo.",
-    19: "Inmadurez emocional puede ser resultado de heridas mixtas.",
-    20: "Dolor heredado sin vivirlo es carga transgeneracional."
+explicaciones = {
+    1: "¿Te sientes inquieto o nervioso cuando no hay nadie contigo?",
+    2: "¿Sientes que necesitas hacer cosas para que otros te valoren?",
+    3: "¿Te incomoda sentir placer físico o expresarte corporalmente?",
+    4: "¿Te cuesta abrir tu mundo interior por miedo a ser herido?",
+    5: "¿Sientes que debes rendir más aunque ya haces mucho?",
+    6: "¿Te preguntas a veces para qué estás aquí o qué sentido tiene tu vida?",
+    7: "¿Te sientes fuera de lugar incluso con gente cercana?",
+    8: "¿Sientes que no notan tu presencia o tu esfuerzo?",
+    9: "¿Tienes emociones o sueños que parecen no ser tuyos?",
+    10: "¿Hay momentos de tu infancia que simplemente no recuerdas?",
+    11: "¿Te cuesta aceptar ayuda o muestras de cariño?",
+    12: "¿Recuerdas con tristeza o dolor a alguien que ya no está?",
+    13: "¿Sientes que debes probar constantemente que vales?",
+    14: "¿Te afecta mucho si alguien no responde a tu amor?",
+    15: "¿Te sientes mal por disfrutar o darte gustos personales?",
+    16: "¿Tienes la sensación de que algo malo está por pasar?",
+    17: "¿Sientes que no puedes disfrutar el presente por pensar en lo que viene?",
+    18: "¿Te bloqueas cuando sientes rechazo o crítica?",
+    19: "¿A veces reaccionas como si fueras un niño o adolescente?",
+    20: "¿Sientes que arrastras emociones que no son tuyas?"
 }
 
 respuestas = {}
@@ -90,8 +90,8 @@ for i in range(1, 21):
     with col1:
         respuestas[i] = st.slider(f"{i}. {afirmaciones[i]}", 1, 5, 3, key=f"slider_{i}")
     with col2:
-        if st.button("?", key=f"help_{i}"):
-            st.info(ayudas[i])
+        if st.button("Explicar", key=f"help_{i}"):
+            st.info(explicaciones[i])
 
 if st.button("🔍 Ver Heridas Activas"):
     heridas_activas = {}
@@ -107,7 +107,13 @@ if st.button("🔍 Ver Heridas Activas"):
     if heridas_activas:
         st.subheader("💔 Tus Heridas Activas")
         for h, (estado, pct) in heridas_activas.items():
-            st.error(f"🔹 {h} ({estado} - {pct}%)\n\n{ayudas[list(afirmaciones.keys())[list(heridas[h])[0] - 1]]}")
-        st.session_state.heridas_activas = heridas_activas
+            st.error(f"🔹 {h} ({estado} - {pct}%)")
+        st.success("📄 Puedes solicitar ayuda profesional si te sientes identificado.")
     else:
         st.success("🎉 No hay heridas activas detectadas. ¡Sigue cuidándote emocionalmente!")
+
+st.markdown("---")
+st.markdown("¿Deseas conversar con un terapeuta?")
+if st.button("💬 Contactar vía WhatsApp"):
+    js = "window.open('https://wa.me/56967010107','_blank')"
+    st.components.v1.html(f"<script>{js}</script>", height=0)
